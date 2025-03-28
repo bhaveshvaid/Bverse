@@ -1,4 +1,35 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+  /* Light Mode Colors */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --bg-tertiary: #f1f3f5;
+  --text-primary: #212529;
+  --text-secondary: #495057;
+  --text-tertiary: #868e96;
+  --accent: #0066cc;
+  --accent-hover: #0052a3;
+  --accent-light: rgba(0, 102, 204, 0.1);
+  --border: #dee2e6;
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --transition: all 0.3s ease;
+}
+
+.dark-mode {
+  /* Dark Mode Colors */
+  --bg-primary: #121212;
+  --bg-secondary: #1e1e1e;
+  --bg-tertiary: #252525;
+  --text-primary: #f8f9fa;
+  --text-secondary: #dee2e6;
+  --text-tertiary: #adb5bd;
+  --accent: #3a86ff;
+  --accent-hover: #2c70d6;
+  --accent-light: rgba(58, 134, 255, 0.1);
+  --border: #333333;
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
 
 * {
   margin: 0;
@@ -11,56 +42,79 @@ html {
 }
 
 body {
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Inter', sans-serif;
   line-height: 1.6;
-  color: #333;
-  background-color: #f8f8f8;
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+  transition: color 0.3s ease, background-color 0.3s ease;
 }
 
-section {
-  min-height: 50vh;
-  position: relative;
-}
-
-/* Specific adjustment for education section to handle multiple cards */
-#education {
-  padding: 5rem 0;
-  min-height: auto; /* Override min-height for education section */
-}
-
-h1, h2, h3, h4, h5, h6 {
-  font-family: 'Poppins', sans-serif;
-  font-weight: 700;
-  line-height: 1.2;
+/* Explicitly set cursor for clickable elements */
+a, button, input, select, textarea {
+  cursor: pointer;
 }
 
 a {
   text-decoration: none;
+  color: var(--accent);
 }
 
 img {
   max-width: 100%;
-  height: auto;
+  display: block;
 }
 
-button {
-  font-family: 'Poppins', sans-serif;
+/* Theme Toggle Button */
+.theme-toggle {
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  cursor: pointer;
+  z-index: 100;
+  box-shadow: var(--shadow);
+  transition: all 0.3s ease;
+  border: 1px solid var(--border);
 }
 
-/* Add a subtle scrollbar styling */
-::-webkit-scrollbar {
-  width: 10px;
+.theme-toggle:hover {
+  transform: rotate(15deg);
 }
 
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
+/* Selection styling */
+::selection {
+  background-color: var(--accent);
+  color: white;
 }
 
-::-webkit-scrollbar-thumb {
-  background: linear-gradient(to bottom, #00bfff, #0077ff);
-  border-radius: 5px;
+/* Force high contrast elements */
+section {
+  color: var(--text-primary) !important;
+  background-color: var(--bg-primary) !important;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(to bottom, #0099cc, #0066cc);
+section:nth-child(even) {
+  background-color: var(--bg-secondary) !important;
+}
+
+.dark-mode section {
+  color: var(--text-primary) !important;
+}
+
+/* Custom cursor fixes */
+@media (hover: none) {
+  .custom-cursor {
+    display: none !important;
+  }
+  body {
+    cursor: auto !important;
+  }
 }

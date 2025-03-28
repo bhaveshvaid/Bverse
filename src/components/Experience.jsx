@@ -1,239 +1,291 @@
 import styled from 'styled-components';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { useRef } from 'react';
 import { experience } from '../data/experience';
-import { FaBriefcase, FaCalendarAlt, FaMapMarkerAlt } from 'react-icons/fa';
 
 const ExperienceSection = styled.section`
-  padding: 5rem 2rem;
-  background: linear-gradient(135deg, #f6f9fc 0%, #f0f4f8 100%);
-  position: relative;
+  padding: 5rem 0;
+  background-color: var(--bg-primary);
 `;
 
-const SectionTitle = styled.h2`
-  font-size: 2.5rem;
-  text-align: center;
-  margin-bottom: 3rem;
+const Container = styled.div`
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+`;
+
+const SectionHeading = styled.h2`
+  font-size: clamp(1.5rem, 5vw, 2rem);
+  font-weight: 700;
+  margin-bottom: 4rem;
+  color: var(--text-primary);
   position: relative;
+  display: inline-block;
   
-  &:after {
+  &::after {
     content: '';
     position: absolute;
-    bottom: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 70px;
-    height: 3px;
-    background: linear-gradient(90deg, #00bfff, #0077ff);
+    bottom: -0.5rem;
+    left: 0;
+    width: 3rem;
+    height: 0.25rem;
+    background-color: var(--accent);
   }
 `;
 
 const Timeline = styled.div`
-  max-width: 800px;
-  margin: 0 auto;
   position: relative;
+  max-width: 1000px;
+  margin: 0 auto;
   
-  &:before {
+  &::before {
     content: '';
     position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 2px;
+    top: 0;
+    left: 18px;
     height: 100%;
-    background: linear-gradient(to bottom, #00bfff, #0077ff);
+    width: 2px;
+    background: linear-gradient(to bottom, var(--accent), var(--accent-light));
     
-    @media (max-width: 768px) {
-      left: 20px;
+    @media (min-width: 768px) {
+      left: 50%;
+      transform: translateX(-50%);
     }
   }
 `;
 
 const TimelineItem = styled(motion.div)`
-  padding: 1rem 0;
   position: relative;
-  width: 100%;
-  display: flex;
+  margin-bottom: 4rem;
   
-  @media (max-width: 768px) {
-    padding-left: 60px;
+  &:last-child {
+    margin-bottom: 0;
+  }
+  
+  @media (min-width: 768px) {
+    width: 50%;
+    
+    &:nth-child(odd) {
+      left: 0;
+      padding-right: 3rem;
+      
+      .timeline-dot {
+        right: -10px;
+      }
+      
+      .timeline-content::before {
+        right: -15px;
+        border-width: 10px 0 10px 15px;
+        border-color: transparent transparent transparent var(--bg-tertiary);
+      }
+    }
+    
+    &:nth-child(even) {
+      left: 50%;
+      padding-left: 3rem;
+      
+      .timeline-dot {
+        left: -10px;
+      }
+      
+      .timeline-content::before {
+        left: -15px;
+        border-width: 10px 15px 10px 0;
+        border-color: transparent var(--bg-tertiary) transparent transparent;
+      }
+    }
+  }
+  
+  @media (max-width: 767px) {
+    padding-left: 3rem;
+    
+    .timeline-dot {
+      left: -10px;
+    }
+  }
+`;
+
+const TimelineDot = styled.div`
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background-color: var(--accent);
+  border-radius: 50%;
+  top: 15px;
+  z-index: 2;
+  
+  @media (min-width: 768px) {
+    top: 20px;
+  }
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 30px;
+    height: 30px;
+    background-color: rgba(0, 153, 255, 0.2);
+    border-radius: 50%;
   }
 `;
 
 const TimelineContent = styled.div`
-  width: 45%;
-  padding: 1.5rem;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
   position: relative;
-  transition: all 0.3s ease;
+  padding: 1.5rem;
+  background-color: var(--bg-tertiary);
+  border-radius: 0.25rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   
-  ${({ isEven }) => isEven && `
-    margin-left: auto;
-  `}
-  
-  @media (max-width: 768px) {
-    width: 100%;
-    margin-left: 0 !important;
-  }
-  
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-    background: linear-gradient(to right, white, #f8fbff);
-  }
-  
-  &:before {
+  &::before {
     content: '';
     position: absolute;
-    top: 20px;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #00bfff, #0077ff);
-    z-index: 1;
-    box-shadow: 0 0 0 4px rgba(0, 191, 255, 0.2);
-    transition: all 0.3s ease;
+    top: 15px;
+    border-style: solid;
     
-    ${({ isEven }) => isEven ? `
-      left: -60px;
-    ` : `
-      right: -60px;
-    `}
-    
-    @media (max-width: 768px) {
-      left: -50px;
+    @media (max-width: 767px) {
+      left: -15px;
+      border-width: 10px 15px 10px 0;
+      border-color: transparent var(--bg-tertiary) transparent transparent;
     }
   }
+`;
+
+const CompanyLogo = styled.div`
+  position: absolute;
+  top: -20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  background-color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 0.25rem;
   
-  &:hover:before {
-    box-shadow: 0 0 0 6px rgba(0, 191, 255, 0.3);
-    transform: scale(1.1);
-  }
-  
-  &:after {
-    content: '';
-    position: absolute;
-    top: 22px;
-    width: 40px;
-    height: 2px;
-    background: linear-gradient(90deg, #00bfff, #0077ff);
-    z-index: 0;
-    
-    ${({ isEven }) => isEven ? `
-      left: -40px;
-    ` : `
-      right: -40px;
-    `}
-    
-    @media (max-width: 768px) {
-      left: -30px;
-      width: 30px;
-    }
+  img {
+    max-width: 80%;
+    max-height: 80%;
   }
 `;
 
 const JobTitle = styled.h3`
-  font-size: 1.3rem;
+  font-size: 1.25rem;
+  font-weight: 600;
   margin-bottom: 0.5rem;
-  color: #333;
-  position: relative;
-  display: inline-block;
-  
-  &:after {
-    content: '';
-    position: absolute;
-    bottom: -5px;
-    left: 0;
-    width: 40px;
-    height: 2px;
-    background: linear-gradient(90deg, #00bfff, transparent);
-  }
+  color: var(--text-primary);
 `;
 
-const Company = styled.h4`
-  font-size: 1.1rem;
-  color: #00bfff;
+const CompanyName = styled.h4`
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: var(--accent);
+`;
+
+const Period = styled.div`
+  font-size: 0.875rem;
   margin-bottom: 1rem;
-  background: linear-gradient(90deg, #00bfff, #0077ff);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-`;
-
-const Meta = styled.div`
+  color: var(--text-tertiary);
   display: flex;
-  flex-wrap: wrap;
+  align-items: center;
   gap: 1rem;
-  margin-bottom: 1rem;
-  font-size: 0.9rem;
-  color: #666;
 `;
 
-const MetaItem = styled.div`
+const Location = styled.span`
   display: flex;
   align-items: center;
   
-  svg {
+  &::before {
+    content: '•';
     margin-right: 0.5rem;
-    color: #00bfff;
   }
 `;
 
 const Description = styled.p`
+  font-size: 0.875rem;
+  line-height: 1.8;
+  color: var(--text-secondary);
   margin-bottom: 1rem;
-  line-height: 1.6;
 `;
 
-const Responsibilities = styled.ul`
-  padding-left: 1.2rem;
+const ResponsibilitiesList = styled.ul`
+  list-style: none;
+  padding: 0;
+`;
+
+const ResponsibilityItem = styled.li`
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+  padding-left: 1rem;
+  position: relative;
+  color: var(--text-secondary);
   
-  li {
-    margin-bottom: 0.5rem;
-    position: relative;
-    
-    &:before {
-      content: '•';
-      color: #00bfff;
-      position: absolute;
-      left: -1rem;
-    }
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.5rem;
+    width: 0.25rem;
+    height: 0.25rem;
+    background-color: var(--accent);
+    border-radius: 50%;
   }
 `;
 
 function Experience() {
+  const ref = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"]
+  });
+  
+  const opacity = useTransform(scrollYProgress, [0, 0.5], [0.3, 1]);
+  
   return (
-    <ExperienceSection id="experience">
-      <SectionTitle>Work Experience</SectionTitle>
-      
-      <Timeline>
-        {experience.map((job, index) => (
-          <TimelineItem 
-            key={job.id}
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            viewport={{ once: true }}
-          >
-            <TimelineContent isEven={index % 2 === 0}>
-              <JobTitle>{job.title}</JobTitle>
-              <Company>{job.company}</Company>
-              <Meta>
-                <MetaItem>
-                  <FaCalendarAlt /> {job.period}
-                </MetaItem>
-                <MetaItem>
-                  <FaMapMarkerAlt /> {job.location}
-                </MetaItem>
-              </Meta>
-              <Description>{job.description}</Description>
-              <Responsibilities>
-                {job.responsibilities.map((item, i) => (
-                  <li key={i}>{item}</li>
-                ))}
-              </Responsibilities>
-            </TimelineContent>
-          </TimelineItem>
-        ))}
-      </Timeline>
+    <ExperienceSection id="experience" ref={ref}>
+      <Container>
+        <SectionHeading>Experience</SectionHeading>
+        
+        <Timeline style={{ opacity }}>
+          {experience.map((job, index) => (
+            <TimelineItem
+              key={job.id}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              viewport={{ once: true, amount: 0.2 }}
+            >
+              <TimelineDot className="timeline-dot" />
+              
+              <TimelineContent className="timeline-content">
+                <CompanyLogo>
+                  <img src={job.logo} alt={job.company} />
+                </CompanyLogo>
+                
+                <JobTitle>{job.title}</JobTitle>
+                <CompanyName>{job.company}</CompanyName>
+                <Period>
+                  {job.period}
+                  <Location>{job.location}</Location>
+                </Period>
+                
+                <Description>{job.description}</Description>
+                
+                <ResponsibilitiesList>
+                  {job.responsibilities.map((item, i) => (
+                    <ResponsibilityItem key={i}>{item}</ResponsibilityItem>
+                  ))}
+                </ResponsibilitiesList>
+              </TimelineContent>
+            </TimelineItem>
+          ))}
+        </Timeline>
+      </Container>
     </ExperienceSection>
   );
 }

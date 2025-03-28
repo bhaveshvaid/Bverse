@@ -1,99 +1,87 @@
 import { useState, useRef } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-import { FaEnvelope, FaPhone, FaGithub, FaLinkedin } from 'react-icons/fa';
 import { personalInfo } from '../data/personalInfo';
-import emailjs from '@emailjs/browser';
+import { FaEnvelope, FaPhone, FaGithub, FaLinkedin } from 'react-icons/fa';
 
 const ContactSection = styled.section`
-  padding: 5rem 2rem;
-  background: linear-gradient(135deg, #f6f9fc 0%, #e6f0f9 100%);
-  position: relative;
-  overflow: hidden;
-  
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(circle at top right, rgba(0,191,255,0.1) 0%, transparent 70%);
-  }
+  padding: 5rem 0;
+  background-color: var(--bg-primary);
 `;
 
-const SectionTitle = styled.h2`
-  font-size: 2.5rem;
-  text-align: center;
-  margin-bottom: 3rem;
+const Container = styled.div`
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+`;
+
+const SectionHeading = styled.h2`
+  font-size: clamp(1.5rem, 5vw, 2rem);
+  font-weight: 700;
+  margin-bottom: 4rem;
+  color: var(--text-primary);
   position: relative;
-  z-index: 1;
+  display: inline-block;
   
-  &:after {
+  &::after {
     content: '';
     position: absolute;
-    bottom: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 70px;
-    height: 3px;
-    background: linear-gradient(90deg, #00bfff, #0077ff);
+    bottom: -0.5rem;
+    left: 0;
+    width: 3rem;
+    height: 0.25rem;
+    background-color: var(--accent);
   }
 `;
 
 const ContactContainer = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 3rem;
-  max-width: 1200px;
-  margin: 0 auto;
-  position: relative;
-  z-index: 1;
+  gap: 4rem;
   
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
+    gap: 2rem;
   }
 `;
 
 const ContactInfo = styled.div``;
 
-const InfoTitle = styled.h3`
-  font-size: 1.8rem;
-  margin-bottom: 1.5rem;
-  color: #333;
-  position: relative;
-  display: inline-block;
-  
-  &:after {
-    content: '';
-    position: absolute;
-    bottom: -8px;
-    left: 0;
-    width: 50px;
-    height: 2px;
-    background: linear-gradient(90deg, #00bfff, transparent);
-  }
+const InfoHeading = styled.h3`
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
 `;
 
 const InfoText = styled.p`
+  font-size: 1rem;
+  line-height: 1.8;
+  color: var(--text-secondary);
   margin-bottom: 2rem;
-  line-height: 1.6;
-  color: #555;
 `;
 
-const ContactDetails = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 1.2rem;
+const ContactList = styled.ul`
+  list-style: none;
+  padding: 0;
 `;
 
-const ContactItem = styled.div`
-  display: flex;
-  align-items: center;
-  transition: transform 0.3s ease;
+const ContactItem = styled.li`
+  margin-bottom: 1.5rem;
   
-  &:hover {
-    transform: translateX(5px);
+  a {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 1rem;
+    color: var(--text-secondary);
+    transition: all 0.3s ease;
+    
+    &:hover {
+      color: var(--accent);
+      transform: translateX(5px);
+    }
   }
 `;
 
@@ -101,84 +89,67 @@ const IconWrapper = styled.div`
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #00bfff, #0077ff);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
-  margin-right: 1rem;
+  background-color: var(--accent-light);
+  color: var(--accent);
+  font-size: 1.25rem;
   transition: all 0.3s ease;
   
-  ${ContactItem}:hover & {
-    transform: scale(1.1);
-    box-shadow: 0 5px 15px rgba(0, 119, 255, 0.3);
+  ${ContactItem} a:hover & {
+    background-color: var(--accent);
+    color: white;
   }
 `;
 
-const ContactLink = styled.a`
-  color: #555;
-  text-decoration: none;
-  transition: color 0.3s ease;
-  
-  &:hover {
-    color: #00bfff;
-  }
-`;
-
-const ContactForm = styled(motion.form)`
-  background: white;
+const FormContainer = styled(motion.div)`
+  background-color: var(--bg-secondary);
+  border-radius: 0.25rem;
   padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-  position: relative;
-  overflow: hidden;
-  
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 5px;
-    background: linear-gradient(90deg, #00bfff, #0077ff);
-  }
-  
-  &:hover {
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-  }
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+`;
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 `;
 
 const FormGroup = styled.div`
-  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 `;
 
-const FormLabel = styled.label`
-  display: block;
-  margin-bottom: 0.5rem;
+const Label = styled.label`
+  font-size: 0.875rem;
   font-weight: 500;
-  color: #333;
+  color: var(--text-primary);
 `;
 
-const FormInput = styled.input`
-  width: 100%;
-  padding: 0.8rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+const Input = styled.input`
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 0.25rem;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
   font-size: 1rem;
   transition: all 0.3s ease;
   
   &:focus {
     outline: none;
-    border-color: #00bfff;
-    box-shadow: 0 0 0 3px rgba(0, 191, 255, 0.1);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-light);
   }
 `;
 
-const FormTextarea = styled.textarea`
-  width: 100%;
-  padding: 0.8rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+const Textarea = styled.textarea`
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 0.25rem;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
   font-size: 1rem;
   min-height: 150px;
   resize: vertical;
@@ -186,49 +157,47 @@ const FormTextarea = styled.textarea`
   
   &:focus {
     outline: none;
-    border-color: #00bfff;
-    box-shadow: 0 0 0 3px rgba(0, 191, 255, 0.1);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-light);
   }
 `;
 
 const SubmitButton = styled.button`
-  background: linear-gradient(135deg, #00bfff, #0077ff);
+  padding: 0.875rem 1.5rem;
+  background-color: var(--accent);
   color: white;
   border: none;
-  padding: 0.8rem 2rem;
-  border-radius: 4px;
+  border-radius: 0.25rem;
   font-size: 1rem;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
-  background-size: 200% auto;
   
   &:hover {
-    background-position: right center;
-    box-shadow: 0 5px 15px rgba(0, 119, 255, 0.3);
+    background-color: var(--accent-hover);
+    transform: translateY(-2px);
   }
   
   &:disabled {
-    background: linear-gradient(135deg, #cccccc, #a0a0a0);
+    background-color: var(--text-tertiary);
     cursor: not-allowed;
+    transform: none;
   }
 `;
 
-const FormMessage = styled.div`
-  margin-top: 1rem;
-  padding: 0.8rem;
-  border-radius: 4px;
+const MessageStatus = styled.div`
+  padding: 0.75rem 1rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
   
   &.success {
-    background: linear-gradient(135deg, rgba(0, 200, 0, 0.1), rgba(0, 150, 0, 0.1));
-    color: green;
-    border-left: 3px solid green;
+    background-color: rgba(0, 200, 0, 0.1);
+    color: #00aa00;
   }
   
   &.error {
-    background: linear-gradient(135deg, rgba(255, 0, 0, 0.1), rgba(200, 0, 0, 0.1));
-    color: red;
-    border-left: 3px solid red;
+    background-color: rgba(255, 0, 0, 0.1);
+    color: #aa0000;
   }
 `;
 
@@ -255,14 +224,8 @@ function Contact() {
     e.preventDefault();
     setLoading(true);
     
-    // Replace with your EmailJS service ID, template ID, and public key
-    emailjs.sendForm(
-      'YOUR_SERVICE_ID',
-      'YOUR_TEMPLATE_ID',
-      formRef.current,
-      'YOUR_PUBLIC_KEY'
-    )
-    .then(() => {
+    // Simulate form submission - replace with actual EmailJS implementation
+    setTimeout(() => {
       setStatus({
         submitted: true,
         success: true,
@@ -270,121 +233,115 @@ function Contact() {
       });
       setFormData({ name: '', email: '', message: '' });
       setLoading(false);
-    })
-    .catch(() => {
-      setStatus({
-        submitted: true,
-        success: false,
-        message: 'Something went wrong. Please try again.'
-      });
-      setLoading(false);
-    });
+    }, 1500);
   };
   
   return (
     <ContactSection id="contact">
-      <SectionTitle>Contact Me</SectionTitle>
-      
-      <ContactContainer>
-        <ContactInfo>
-          <InfoTitle>Get In Touch</InfoTitle>
-          <InfoText>
-            Feel free to reach out if you're looking for a developer, have a question, or just want to connect.
-          </InfoText>
-          
-          <ContactDetails>
-            <ContactItem>
-              <IconWrapper>
-                <FaEnvelope />
-              </IconWrapper>
-              <ContactLink href={`mailto:${personalInfo.email}`}>
-                {personalInfo.email}
-              </ContactLink>
-            </ContactItem>
-            
-            <ContactItem>
-              <IconWrapper>
-                <FaPhone />
-              </IconWrapper>
-              <ContactLink href={`tel:${personalInfo.phone}`}>
-                {personalInfo.phone}
-              </ContactLink>
-            </ContactItem>
-            
-            <ContactItem>
-              <IconWrapper>
-                <FaGithub />
-              </IconWrapper>
-              <ContactLink href={`https://github.com/${personalInfo.github}`} target="_blank">
-                github.com/{personalInfo.github}
-              </ContactLink>
-            </ContactItem>
-            
-            <ContactItem>
-              <IconWrapper>
-                <FaLinkedin />
-              </IconWrapper>
-              <ContactLink href={`https://linkedin.com/in/${personalInfo.linkedin}`} target="_blank">
-                linkedin.com/in/{personalInfo.linkedin}
-              </ContactLink>
-            </ContactItem>
-          </ContactDetails>
-        </ContactInfo>
+      <Container>
+        <SectionHeading>Contact</SectionHeading>
         
-        <ContactForm
-          ref={formRef}
-          onSubmit={handleSubmit}
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          viewport={{ once: true }}
-        >
-          <FormGroup>
-            <FormLabel htmlFor="name">Name</FormLabel>
-            <FormInput
-              type="text"
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              required
-            />
-          </FormGroup>
+        <ContactContainer>
+          <ContactInfo>
+            <InfoHeading>Get In Touch</InfoHeading>
+            <InfoText>
+              Feel free to reach out if you're looking for a developer, have a question, or just want to connect. I'll get back to you as soon as possible.
+            </InfoText>
+            
+            <ContactList>
+              <ContactItem>
+                <a href={`mailto:${personalInfo.email}`}>
+                  <IconWrapper>
+                    <FaEnvelope />
+                  </IconWrapper>
+                  {personalInfo.email}
+                </a>
+              </ContactItem>
+              
+              <ContactItem>
+                <a href={`tel:${personalInfo.phone}`}>
+                  <IconWrapper>
+                    <FaPhone />
+                  </IconWrapper>
+                  {personalInfo.phone}
+                </a>
+              </ContactItem>
+              
+              <ContactItem>
+                <a href={`https://github.com/${personalInfo.github}`} target="_blank" rel="noopener noreferrer">
+                  <IconWrapper>
+                    <FaGithub />
+                  </IconWrapper>
+                  github.com/{personalInfo.github}
+                </a>
+              </ContactItem>
+              
+              <ContactItem>
+                <a href={`https://linkedin.com/in/${personalInfo.linkedin}`} target="_blank" rel="noopener noreferrer">
+                  <IconWrapper>
+                    <FaLinkedin />
+                  </IconWrapper>
+                  linkedin.com/in/{personalInfo.linkedin}
+                </a>
+              </ContactItem>
+            </ContactList>
+          </ContactInfo>
           
-          <FormGroup>
-            <FormLabel htmlFor="email">Email</FormLabel>
-            <FormInput
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-            />
-          </FormGroup>
-          
-          <FormGroup>
-            <FormLabel htmlFor="message">Message</FormLabel>
-            <FormTextarea
-              id="message"
-              name="message"
-              value={formData.message}
-              onChange={handleChange}
-              required
-            />
-          </FormGroup>
-          
-          <SubmitButton type="submit" disabled={loading}>
-            {loading ? 'Sending...' : 'Send Message'}
-          </SubmitButton>
-          
-          {status.submitted && (
-            <FormMessage className={status.success ? 'success' : 'error'}>
-              {status.message}
-            </FormMessage>
-          )}
-        </ContactForm>
-      </ContactContainer>
+          <FormContainer
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+          >
+            <Form ref={formRef} onSubmit={handleSubmit}>
+              <FormGroup>
+                <Label htmlFor="name">Name</Label>
+                <Input
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
+                />
+              </FormGroup>
+              
+              <FormGroup>
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                />
+              </FormGroup>
+              
+              <FormGroup>
+                <Label htmlFor="message">Message</Label>
+                <Textarea
+                  id="message"
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  required
+                />
+              </FormGroup>
+              
+              <SubmitButton type="submit" disabled={loading}>
+                {loading ? 'Sending...' : 'Send Message'}
+              </SubmitButton>
+              
+              {status.submitted && (
+                <MessageStatus className={status.success ? 'success' : 'error'}>
+                  {status.message}
+                </MessageStatus>
+              )}
+            </Form>
+          </FormContainer>
+        </ContactContainer>
+      </Container>
     </ContactSection>
   );
 }

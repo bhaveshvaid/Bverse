@@ -1,267 +1,185 @@
+import { useState } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { skills } from '../data/skills';
-import { FaCode, FaLayerGroup, FaDatabase, FaTools } from 'react-icons/fa';
 
 const SkillsSection = styled.section`
-  padding: 5rem 2rem;
-  background: linear-gradient(135deg, #141E30 0%, #243B55 100%);
-  color: white;
-  position: relative;
-  overflow: hidden;
-  
-  &::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(0,191,255,0.05) 0%, transparent 50%);
-    animation: rotate 30s linear infinite;
-  }
-  
-  @keyframes rotate {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-  }
+  padding: 5rem 0;
+  background-color: var(--bg-primary);
 `;
 
-const SectionTitle = styled.h2`
-  font-size: 2.5rem;
-  text-align: center;
-  margin-bottom: 3rem;
-  color: white;
+const Container = styled.div`
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+`;
+
+const SectionHeading = styled.h2`
+  font-size: clamp(1.5rem, 5vw, 2rem);
+  font-weight: 700;
+  margin-bottom: 4rem;
+  color: var(--text-primary);
   position: relative;
-  z-index: 1;
+  display: inline-block;
   
-  &:after {
+  &::after {
     content: '';
     position: absolute;
-    bottom: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 70px;
-    height: 3px;
-    background: linear-gradient(90deg, #00bfff, #0077ff);
+    bottom: -0.5rem;
+    left: 0;
+    width: 3rem;
+    height: 0.25rem;
+    background-color: var(--accent);
   }
 `;
 
 const SkillsContainer = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 2rem;
-  max-width: 1200px;
+  max-width: 800px;
   margin: 0 auto;
-  position: relative;
-  z-index: 1;
 `;
 
-const SkillCard = styled(motion.div)`
-  background: rgba(255, 255, 255, 0.05);
-  padding: 1.5rem;
-  border-radius: 8px;
-  transition: all 0.3s ease;
-  position: relative;
-  z-index: 1;
-  overflow: hidden;
-  
-  &:before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    border-radius: 8px;
-    background: linear-gradient(120deg, rgba(0,191,255,0.1) 0%, rgba(0,191,255,0.2) 100%);
-    opacity: 0;
-    z-index: -1;
-    transition: opacity 0.3s ease;
-  }
-  
-  &:hover:before {
-    opacity: 1;
-  }
-  
-  &:after {
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 3px;
-    bottom: 0;
-    left: 0;
-    background: linear-gradient(90deg, #00bfff, transparent);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.5s ease;
-  }
-  
-  &:hover:after {
-    transform: scaleX(1);
-  }
-`;
-
-const CardHeader = styled.div`
-  display: flex;
+const MernBadge = styled(motion.div)`
+  display: inline-flex;
   align-items: center;
-  margin-bottom: 1.5rem;
-`;
-
-const IconWrapper = styled.div`
-  font-size: 1.8rem;
-  color: #00bfff;
-  margin-right: 1rem;
-  background: linear-gradient(135deg, #00bfff, #0077ff);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-`;
-
-const CardTitle = styled.h3`
-  font-size: 1.3rem;
-`;
-
-const SkillsList = styled.ul`
-  list-style-type: none;
-  padding: 0;
-`;
-
-const SkillItem = styled(motion.li)`
-  padding: 0.7rem 1rem;
-  margin-bottom: 0.7rem;
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: 4px;
-  position: relative;
-  overflow: hidden;
+  background: linear-gradient(90deg, var(--accent), var(--accent-hover));
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 2rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: 3rem;
+  box-shadow: 0 4px 12px rgba(0, 153, 255, 0.2);
   
-  &:after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 3px;
-    height: 100%;
-    background: linear-gradient(to bottom, #00bfff, #0077ff);
-    opacity: 0;
-    transition: opacity 0.3s ease;
+  &::before {
+    content: '●';
+    margin-right: 0.5rem;
+    font-size: 0.75rem;
   }
+`;
+
+const TagsContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 2.5rem;
+`;
+
+const TagButton = styled.button`
+  padding: 0.5rem 1rem;
+  background-color: ${props => props.active ? 'var(--accent)' : 'transparent'};
+  color: ${props => props.active ? 'white' : 'var(--text-secondary)'};
+  border: 1px solid ${props => props.active ? 'var(--accent)' : 'var(--border)'};
+  border-radius: 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  cursor: pointer;
   
   &:hover {
-    transform: translateX(5px);
-    background: rgba(255, 255, 255, 0.12);
+    border-color: var(--accent);
   }
-  
-  &:hover:after {
-    opacity: 1;
-  }
+`;
+
+const SkillsList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+`;
+
+const SkillItem = styled(motion.div)`
+  margin-bottom: 0.5rem;
+`;
+
+const SkillHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+`;
+
+const SkillName = styled.h3`
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+`;
+
+const ProgressContainer = styled.div`
+  height: 0.5rem;
+  background-color: var(--bg-tertiary);
+  border-radius: 0.25rem;
+  overflow: hidden;
+`;
+
+const Progress = styled.div`
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--accent-hover));
+  border-radius: 0.25rem;
+  width: ${props => props.width}%;
+  transition: width 1s ease;
 `;
 
 function Skills() {
+  const [filter, setFilter] = useState('all');
+  
+  const categories = [
+    { id: 'all', name: 'All Skills' },
+    { id: 'frontend', name: 'Frontend' },
+    { id: 'backend', name: 'Backend' },
+    { id: 'languages', name: 'Languages' }
+  ];
+  
+  const filteredSkills = filter === 'all' 
+    ? skills 
+    : skills.filter(skill => skill.category === filter);
+  
   return (
     <SkillsSection id="skills">
-      <SectionTitle>Skills</SectionTitle>
-      
-      <SkillsContainer>
-        <SkillCard
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          viewport={{ once: true }}
-        >
-          <CardHeader>
-            <IconWrapper><FaCode /></IconWrapper>
-            <CardTitle>Languages</CardTitle>
-          </CardHeader>
-          <SkillsList>
-            {skills.languages.map((skill, index) => (
-              <SkillItem
-                key={index}
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.3, delay: index * 0.1 }}
-                viewport={{ once: true }}
-              >
-                {skill}
-              </SkillItem>
-            ))}
-          </SkillsList>
-        </SkillCard>
+      <Container>
+        <SectionHeading>My Skills</SectionHeading>
         
-        <SkillCard
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          viewport={{ once: true }}
-        >
-          <CardHeader>
-            <IconWrapper><FaLayerGroup /></IconWrapper>
-            <CardTitle>Frameworks</CardTitle>
-          </CardHeader>
+        <SkillsContainer>
+          <MernBadge
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: true }}
+          >
+            MERN Stack Developer
+          </MernBadge>
+          
+          <TagsContainer>
+            {categories.map(category => (
+              <TagButton
+                key={category.id}
+                active={filter === category.id}
+                onClick={() => setFilter(category.id)}
+              >
+                {category.name}
+              </TagButton>
+            ))}
+          </TagsContainer>
+          
           <SkillsList>
-            {skills.frameworks.map((skill, index) => (
+            {filteredSkills.map((skill, index) => (
               <SkillItem
-                key={index}
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.3, delay: index * 0.1 }}
+                key={skill.name}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
                 viewport={{ once: true }}
               >
-                {skill}
+                <SkillHeader>
+                  <SkillName>{skill.name}</SkillName>
+                </SkillHeader>
+                <ProgressContainer>
+                  <Progress width={skill.level} />
+                </ProgressContainer>
               </SkillItem>
             ))}
           </SkillsList>
-        </SkillCard>
-        
-        <SkillCard
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          viewport={{ once: true }}
-        >
-          <CardHeader>
-            <IconWrapper><FaDatabase /></IconWrapper>
-            <CardTitle>Databases</CardTitle>
-          </CardHeader>
-          <SkillsList>
-            {skills.databases.map((skill, index) => (
-              <SkillItem
-                key={index}
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.3, delay: index * 0.1 }}
-                viewport={{ once: true }}
-              >
-                {skill}
-              </SkillItem>
-            ))}
-          </SkillsList>
-        </SkillCard>
-        
-        <SkillCard
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          viewport={{ once: true }}
-        >
-          <CardHeader>
-            <IconWrapper><FaTools /></IconWrapper>
-            <CardTitle>Tools</CardTitle>
-          </CardHeader>
-          <SkillsList>
-            {skills.tools.map((skill, index) => (
-              <SkillItem
-                key={index}
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.3, delay: index * 0.1 }}
-                viewport={{ once: true }}
-              >
-                {skill}
-              </SkillItem>
-            ))}
-          </SkillsList>
-        </SkillCard>
-      </SkillsContainer>
+        </SkillsContainer>
+      </Container>
     </SkillsSection>
   );
 }

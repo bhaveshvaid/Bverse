@@ -1,181 +1,180 @@
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { education } from '../data/education';
-import { FaGraduationCap, FaBook, FaSchool } from 'react-icons/fa';
+import { FaGraduationCap, FaBook } from 'react-icons/fa';
 
 const EducationSection = styled.section`
-  padding: 5rem 2rem;
-  background: linear-gradient(135deg, #0F2027 0%, #203A43 50%, #2C5364 100%);
-  color: white;
+  padding: 5rem 0;
+  background-color: var(--bg-secondary);
 `;
 
-const SectionTitle = styled.h2`
-  font-size: 2.5rem;
-  text-align: center;
-  margin-bottom: 3rem;
-  color: white;
+const Container = styled.div`
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+`;
+
+const SectionHeading = styled.h2`
+  font-size: clamp(1.5rem, 5vw, 2rem);
+  font-weight: 700;
+  margin-bottom: 4rem;
+  color: var(--text-primary);
   position: relative;
+  display: inline-block;
   
-  &:after {
+  &::after {
     content: '';
     position: absolute;
-    bottom: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 70px;
-    height: 3px;
-    background-color: #00bfff;
+    bottom: -0.5rem;
+    left: 0;
+    width: 3rem;
+    height: 0.25rem;
+    background-color: var(--accent);
   }
 `;
 
 const EducationContainer = styled.div`
   max-width: 800px;
   margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
 `;
 
 const EducationCard = styled(motion.div)`
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 8px;
+  position: relative;
+  background-color: var(--bg-primary);
+  border-radius: 0.25rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   overflow: hidden;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 `;
 
 const CardHeader = styled.div`
-  background: linear-gradient(135deg, rgba(0, 191, 255, 0.2) 0%, rgba(0, 191, 255, 0.4) 100%);
   padding: 1.5rem;
   display: flex;
   align-items: center;
+  gap: 1rem;
+  background: linear-gradient(90deg, var(--accent), var(--accent-hover));
+  color: white;
 `;
 
-const IconWrapper = styled.div`
-  font-size: 2.5rem;
-  color: #00bfff;
-  margin-right: 1.5rem;
+const IconContainer = styled.div`
+  font-size: 2rem;
 `;
 
 const HeaderContent = styled.div``;
 
 const Institution = styled.h3`
-  font-size: 1.5rem;
-  margin-bottom: 0.5rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
 `;
 
 const Degree = styled.h4`
-  font-size: 1.2rem;
-  margin-bottom: 0.5rem;
-  font-weight: 400;
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
 `;
 
 const Period = styled.p`
-  font-size: 0.9rem;
-  opacity: 0.7;
-`;
-
-const Board = styled.p`
-  font-size: 0.9rem;
-  opacity: 0.9;
-  color: #00bfff;
-  margin-top: 0.3rem;
+  font-size: 0.875rem;
+  opacity: 0.8;
 `;
 
 const CardBody = styled.div`
   padding: 1.5rem;
 `;
 
-const GPA = styled.p`
-  font-size: 1.1rem;
-  font-weight: 500;
+const GPA = styled.div`
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background-color: var(--accent-light);
+  color: var(--accent);
+  border-radius: 0.25rem;
+  font-weight: 600;
+  font-size: 0.875rem;
   margin-bottom: 1.5rem;
-  color: #00bfff;
 `;
 
 const CoursesTitle = styled.h5`
   font-size: 1.1rem;
+  font-weight: 600;
   margin-bottom: 1rem;
+  color: var(--text-primary);
   display: flex;
   align-items: center;
-  
-  svg {
-    margin-right: 0.5rem;
-    color: #00bfff;
-  }
+  gap: 0.5rem;
 `;
 
-const CoursesList = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.8rem;
+const CoursesGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 0.75rem;
 `;
 
-const CourseItem = styled(motion.span)`
-  background: rgba(255, 255, 255, 0.1);
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  font-size: 0.9rem;
+const CourseItem = styled(motion.div)`
+  padding: 0.75rem;
+  background-color: var(--bg-tertiary);
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
   transition: all 0.3s ease;
   
   &:hover {
-    background: rgba(0, 191, 255, 0.2);
+    background-color: var(--accent-light);
+    color: var(--accent);
     transform: translateY(-2px);
   }
 `;
 
 function Education() {
-  // Function to determine which icon to use based on education level
-  const getEducationIcon = (id) => {
-    if (id === 1) return <FaGraduationCap />;
-    return <FaSchool />;
-  };
-
+  const edu = education[0]; // Only show college education
+  
   return (
     <EducationSection id="education">
-      <SectionTitle>Education</SectionTitle>
-      
-      <EducationContainer>
-        {education.map((edu) => (
+      <Container>
+        <SectionHeading>Education</SectionHeading>
+        
+        <EducationContainer>
           <EducationCard
-            key={edu.id}
-            initial={{ opacity: 0, y: 50 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
             <CardHeader>
-              <IconWrapper>
-                {getEducationIcon(edu.id)}
-              </IconWrapper>
+              <IconContainer>
+                <FaGraduationCap />
+              </IconContainer>
               <HeaderContent>
                 <Institution>{edu.institution}</Institution>
                 <Degree>{edu.degree}</Degree>
                 <Period>{edu.period}</Period>
-                {edu.board && <Board>{edu.board}</Board>}
               </HeaderContent>
             </CardHeader>
+            
             <CardBody>
               <GPA>{edu.gpa}</GPA>
+              
               <CoursesTitle>
-                <FaBook /> {edu.id === 1 ? "Relevant Coursework" : "Subjects"}
+                <FaBook /> Relevant Coursework
               </CoursesTitle>
-              <CoursesList>
+              
+              <CoursesGrid>
                 {edu.courses.map((course, index) => (
                   <CourseItem
                     key={index}
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
+                    initial={{ opacity: 0, y: 10 }}
+                    whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3, delay: index * 0.05 }}
                     viewport={{ once: true }}
                   >
                     {course}
                   </CourseItem>
                 ))}
-              </CoursesList>
+              </CoursesGrid>
             </CardBody>
           </EducationCard>
-        ))}
-      </EducationContainer>
+        </EducationContainer>
+      </Container>
     </EducationSection>
   );
 }

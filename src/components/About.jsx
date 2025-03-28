@@ -1,223 +1,196 @@
-import styled from 'styled-components';
+// src/components/About.jsx
 import { motion } from 'framer-motion';
+import styled from 'styled-components';
 import { personalInfo } from '../data/personalInfo';
 
 const AboutSection = styled.section`
-  padding: 5rem 2rem;
-  background: linear-gradient(135deg, #ffffff 0%, #f8f8f8 100%);
-  position: relative;
-  overflow: hidden;
-  
-  &::before {
-    content: '';
-    position: absolute;
-    top: -10%;
-    right: -10%;
-    width: 500px;
-    height: 500px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(0,191,255,0.03) 0%, transparent 70%);
-  }
+  padding: 7rem 0;
+  background: var(--bg-secondary);
+`;
+
+const Container = styled.div`
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
 `;
 
 const SectionTitle = styled.h2`
   font-size: 2.5rem;
-  text-align: center;
-  margin-bottom: 3rem;
-  position: relative;
-  
-  &:after {
-    content: '';
-    position: absolute;
-    bottom: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 70px;
-    height: 3px;
-    background: linear-gradient(90deg, #00bfff, #0077ff);
-  }
-`;
-
-const Container = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 3rem;
-  max-width: 1200px;
-  margin: 0 auto;
-  position: relative;
-  z-index: 1;
-  
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-  }
-`;
-
-const ImageContainer = styled(motion.div)`
-  position: relative;
-  height: 400px;
-  
-  &::before {
-    content: '';
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    width: 100%;
-    height: 100%;
-    border: 2px solid #00bfff;
-    border-radius: 8px;
-    z-index: -1;
-    transition: all 0.3s ease;
-  }
-  
-  &:hover::before {
-    top: 10px;
-    left: 10px;
-  }
-  
-  @media (max-width: 768px) {
-    height: 300px;
-  }
-`;
-
-const Image = styled.img`
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 8px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-  
-  ${ImageContainer}:hover & {
-    transform: scale(1.02);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-  }
-`;
-
-const ContentContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-`;
-
-const AboutText = styled(motion.p)`
-  font-size: 1.1rem;
-  line-height: 1.8;
-  color: #555;
-  margin-bottom: 2rem;
-  position: relative;
-  
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: -1rem;
-    left: 0;
-    width: 50px;
-    height: 2px;
-    background: linear-gradient(90deg, #00bfff, transparent);
-  }
-`;
-
-const RolesTitle = styled(motion.h3)`
-  font-size: 1.5rem;
-  margin-bottom: 1.5rem;
-  color: #333;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 3.5rem;
   position: relative;
   display: inline-block;
   
   &::after {
     content: '';
     position: absolute;
-    bottom: -8px;
     left: 0;
+    bottom: -0.75rem;
+    height: 4px;
+    width: 60px;
+    background: var(--accent);
+  }
+`;
+
+const ContentWrapper = styled.div`
+  display: grid;
+  grid-template-columns: minmax(250px, 350px) 1fr;
+  gap: 4rem;
+  align-items: start;
+  
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+`;
+
+const ImageContainer = styled(motion.div)`
+  position: relative;
+  box-shadow: var(--shadow-lg);
+  border-radius: 12px;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    display: block;
+    padding-top: 125%; /* 4:5 aspect ratio */
+  }
+  
+  @media (max-width: 768px) {
+    max-width: 300px;
+    margin: 0 auto;
+  }
+`;
+
+const ProfileImage = styled.img`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  transition: transform 0.5s ease;
+  
+  ${ImageContainer}:hover & {
+    transform: scale(1.03);
+  }
+`;
+
+const ContentBox = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const AboutText = styled(motion.p)`
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: var(--text-secondary);
+  margin-bottom: 2.5rem;
+`;
+
+const RolesTitle = styled(motion.h3)`
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 1.5rem;
+  position: relative;
+  display: inline-block;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -0.5rem;
+    height: 3px;
     width: 40px;
-    height: 2px;
-    background: linear-gradient(90deg, #00bfff, transparent);
+    background: var(--accent);
   }
 `;
 
 const RolesList = styled.ul`
-  list-style-type: none;
+  list-style: none;
   padding: 0;
 `;
 
 const RoleItem = styled(motion.li)`
-  padding: 0.7rem 0;
-  padding-left: 1.5rem;
   position: relative;
-  color: #555;
-  transition: all 0.3s ease;
+  padding-left: 2rem;
+  margin-bottom: 1.25rem;
+  color: var(--text-secondary);
   
-  &:before {
-    content: '•';
-    color: #00bfff;
-    font-size: 1.5rem;
+  &::before {
+    content: '';
     position: absolute;
+    top: 0.75rem;
     left: 0;
-    top: 0.5rem;
-    transition: all 0.3s ease;
-  }
-  
-  &:hover {
-    color: #333;
-    transform: translateX(5px);
-  }
-  
-  &:hover:before {
-    color: #0077ff;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--accent);
   }
 `;
 
-function About() {
+const fadeInUp = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
+};
+
+const About = () => {
   return (
     <AboutSection id="about">
-      <SectionTitle>About Me</SectionTitle>
-      
       <Container>
-        <ImageContainer
-          initial={{ opacity: 0, x: -50 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5 }}
-          viewport={{ once: true }}
-        >
-          <Image src="/images/profile.jpg" alt="Bhavesh Vaid" />
-        </ImageContainer>
+        <SectionTitle>About Me</SectionTitle>
         
-        <ContentContainer>
-          <AboutText
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+        <ContentWrapper>
+          <ImageContainer
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
             viewport={{ once: true }}
           >
-            {personalInfo.about}
-          </AboutText>
+            <ProfileImage src="/images/profile.jpg" alt="Bhavesh Vaid" />
+          </ImageContainer>
           
-          <RolesTitle
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            viewport={{ once: true }}
-          >
-            Leadership & Roles
-          </RolesTitle>
-          
-          <RolesList>
-            {personalInfo.roles.map((role, index) => (
-              <RoleItem
-                key={index}
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.3, delay: 0.2 + index * 0.1 }}
-                viewport={{ once: true }}
-              >
-                {role}
-              </RoleItem>
-            ))}
-          </RolesList>
-        </ContentContainer>
+          <ContentBox>
+            <AboutText
+              variants={fadeInUp}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+            >
+              {personalInfo.about}
+            </AboutText>
+            
+            <RolesTitle
+              variants={fadeInUp}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+            >
+              Leadership Roles
+            </RolesTitle>
+            
+            <RolesList>
+              {personalInfo.roles.map((role, index) => (
+                <RoleItem
+                  key={index}
+                  variants={fadeInUp}
+                  initial="hidden"
+                  whileInView="visible"
+                  transition={{ delay: 0.1 * index }}
+                  viewport={{ once: true }}
+                >
+                  {role}
+                </RoleItem>
+              ))}
+            </RolesList>
+          </ContentBox>
+        </ContentWrapper>
       </Container>
     </AboutSection>
   );
-}
+};
 
 export default About;
